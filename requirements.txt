@@ -1,10 +1,10 @@
-streamlit
-tensorflow
-keras
+streamlit==1.32.0
+tensorflow-cpu==2.15.0
+pillow
 numpy
 pandas
 matplotlib
-pillow
+keras
 scikit-learn
 opencv-python
 seaborn
