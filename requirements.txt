@@ -4,7 +4,3 @@ pillow
 numpy
 pandas
 matplotlib
-keras
-scikit-learn
-opencv-python
-seaborn
