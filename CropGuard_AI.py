@@ -55,7 +55,7 @@ st.markdown("""
 .symptom-item { background:#fff8f0; border-left:4px solid #FF9800; padding:10px 14px; margin:6px 0; border-radius:0 10px 10px 0; font-size:14px; color:#444; }
 .treatment-item { background:#f0fff4; border-left:4px solid #2ecc71; padding:10px 14px; margin:6px 0; border-radius:0 10px 10px 0; font-size:14px; color:#444; }
 .conf-wrap { margin:8px 0; }
-.conf-row  { display:flex; justify-content:space-between; font-size:13px; color:#555; margin-bottom:4px; font-weight:600; }
+.conf-row  { display:flex; justify-content:space-between; font-size:13px; color:black; margin-bottom:4px; font-weight:600; }
 .conf-track { background:#f0f0f0; border-radius:10px; height:10px; }
 .conf-fill  { height:10px; border-radius:10px; background:linear-gradient(90deg,#1a5c2e,#2d8a4e); }
 .metrics-row { display:flex; gap:15px; margin:15px 0; }
@@ -64,8 +64,72 @@ st.markdown("""
 .metric-lbl  { font-size:11px; color:#888; margin-top:4px; font-weight:600; }
 .section-title { font-size:17px; font-weight:800; color:#1a5c2e; margin:20px 0 10px; padding-bottom:8px; border-bottom:2px solid #e8f5e9; }
 .stTabs [data-baseweb="tab-list"] { background:white; border-radius:14px; padding:5px; box-shadow:0 2px 10px rgba(0,0,0,0.06); gap:5px; }
-.stTabs [data-baseweb="tab"] { border-radius:10px !important; font-weight:700 !important; font-size:14px !important; padding:10px 20px !important; }
+.stTabs [data-baseweb="tab"] { border-radius:10px !important; font-weight:700 !important; font-size:14px !important; padding:10px 20px !important; color: black !important }
 .stTabs [aria-selected="true"] { background:linear-gradient(135deg,#1a5c2e,#2d8a4e) !important; color:white !important; }
+            /* Fix expander text color */
+.streamlit-expanderHeader {
+    color: black !important;
+    font-weight: 700 !important;
+}
+[data-testid="stExpander"] summary {
+    color: black !important;
+    font-weight: 700 !important;
+}
+[data-testid="stExpander"] summary span {
+    color: black !important;
+}
+            /* Fix all text inside expanders to black */
+[data-testid="stExpander"] p {
+    color: black !important;
+}
+[data-testid="stExpander"] li {
+    color: black !important;
+}
+[data-testid="stExpander"] span {
+    color: black !important;
+}
+[data-testid="stExpander"] div {
+    color: black !important;
+}
+[data-testid="stExpander"] strong {
+    color: black !important;
+}
+            /* Fix Tab 1 disease report text */
+.card {
+    color: black !important;
+}
+.section-title {
+    color: #1a5c2e !important;
+}
+h3 {
+    color: black !important;
+}
+.stMarkdown p {
+    color: black !important;
+}
+.stMarkdown li {
+    color: black !important;
+}
+.stMarkdown span {
+    color: black !important;
+}
+            /* Fix image caption color */
+[data-testid="stImage"] p {
+    color: black !important;
+}
+            /* Fix metric text color */
+[data-testid="stMetricLabel"] {
+    color: black !important;
+}
+[data-testid="stMetricValue"] {
+    color: black !important;
+}
+[data-testid="metric-container"] {
+    color: black !important;
+}
+[data-testid="metric-container"] p {
+    color: black !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -151,7 +215,7 @@ with tab1:
         if uploaded:
             img = Image.open(uploaded)
             st.image(img, use_column_width=True, caption="Uploaded leaf image")
-            st.markdown(f"<div class='card' style='padding:15px;'><small>📐 Size: {img.size[0]}×{img.size[1]}px<br>🔄 Resized to: {IMG_SIZE[0]}×{IMG_SIZE[1]}px<br>📁 {uploaded.name}</small></div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='card' style='padding:15px; color:black;'><small>📐 Size: {img.size[0]}×{img.size[1]}px<br>🔄 Resized to: {IMG_SIZE[0]}×{IMG_SIZE[1]}px<br>📁 {uploaded.name}</small></div>", unsafe_allow_html=True)
         else:
             st.markdown("<div style='background:white;border:2.5px dashed #2d8a4e;border-radius:20px;padding:50px 20px;text-align:center;color:#888;'><div style='font-size:50px;margin-bottom:15px;'>📷</div><div style='font-size:16px;font-weight:700;color:#1a5c2e;margin-bottom:8px;'>Upload a Leaf Photo</div><div style='font-size:13px;line-height:1.8;'>💡 <b>Tips:</b><br>• Good natural lighting<br>• Full leaf in the frame<br>• Focus on affected area<br>• Avoid blurry images</div></div>", unsafe_allow_html=True)
 
@@ -180,13 +244,13 @@ with tab1:
         st.markdown(f"### 📋 Disease Report: {top_class}")
         col_a, col_b = st.columns(2, gap="large")
         with col_a:
-            st.markdown(f"<div class='card'><div class='section-title'>📋 Description</div><div style='font-size:14px;color:#555;line-height:1.7;'>{info['description']}</div></div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='card'><div class='section-title'>📋 Description</div><div style='font-size:14px;color:black;line-height:1.7;'>{info['description']}</div></div>", unsafe_allow_html=True)
             st.markdown("<div class='section-title'>🚨 Symptoms</div>", unsafe_allow_html=True)
             for s in info['symptoms']: st.markdown(f"<div class='symptom-item'>⚠️ {s}</div>", unsafe_allow_html=True)
         with col_b:
             st.markdown("<div class='section-title'>💊 Recommended Treatment</div>", unsafe_allow_html=True)
             for t in info['treatment']: st.markdown(f"<div class='treatment-item'>✅ {t}</div>", unsafe_allow_html=True)
-            st.markdown("<div class='card' style='border:2px solid #e8f5e9;margin-top:15px;'><div class='section-title'>📞 Need Expert Help?</div><div style='font-size:13px;color:#555;line-height:1.9;'>📍 Contact your local Agricultural Extension Officer<br>📞 NASC Helpline: <b>0800-FARMER</b><br>🌐 IITA Nigeria: <b>www.iita.org</b></div></div>", unsafe_allow_html=True)
+            st.markdown("<div class='card' style='border:2px solid #e8f5e9;margin-top:15px;'><div class='section-title'>📞 Need Expert Help?</div><div style='font-size:13px;color:black;line-height:1.9;'>📍 Contact your local Agricultural Extension Officer<br>📞 NASC Helpline: <b>0800-FARMER</b><br>🌐 IITA Nigeria: <b>www.iita.org</b></div></div>", unsafe_allow_html=True)
 
 # TAB 2
 with tab2:
@@ -219,12 +283,12 @@ with tab2:
     st.markdown("<div class='section-title'>📂 Dataset Information</div>", unsafe_allow_html=True)
     c1,c2,c3,c4 = st.columns(4)
     c1.metric("Total Images","~11,500"); c2.metric("Training","70%"); c3.metric("Validation","15%"); c4.metric("Test","15%")
-    st.markdown("<div class='card'><div style='font-size:14px;color:#555;line-height:2;'>🌾 <b>Crops:</b> Cassava, Maize, Yam<br>🏷️ <b>Classes:</b> 15 disease categories<br>📐 <b>Image size:</b> 224 × 224 pixels<br>🔄 <b>Augmentation:</b> Rotation, flip, zoom, brightness<br>✂️ <b>Split:</b> 70% train | 15% val | 15% test (stratified)<br>⚖️ <b>Class weights:</b> Applied to handle class imbalance</div></div>", unsafe_allow_html=True)
+    st.markdown("<div class='card'><div style='font-size:14px;color:black;line-height:2;'>🌾 <b>Crops:</b> Cassava, Maize, Yam<br>🏷️ <b>Classes:</b> 15 disease categories<br>📐 <b>Image size:</b> 224 × 224 pixels<br>🔄 <b>Augmentation:</b> Rotation, flip, zoom, brightness<br>✂️ <b>Split:</b> 70% train | 15% val | 15% test (stratified)<br>⚖️ <b>Class weights:</b> Applied to handle class imbalance</div></div>", unsafe_allow_html=True)
 
 # TAB 3
 with tab3:
     st.markdown("<div style='font-size:22px;font-weight:900;color:#1a1a1a;margin-bottom:5px;'>Disease Reference Guide</div>", unsafe_allow_html=True)
-    st.markdown("<div style='font-size:14px;color:#888;margin-bottom:20px;'>Complete information on all 15 disease classes covered by this system.</div>", unsafe_allow_html=True)
+    st.markdown("<div style='font-size:14px;color:black;margin-bottom:20px;'>Complete information on all 15 disease classes covered by this system.</div>", unsafe_allow_html=True)
 
     crop_filter = st.selectbox("Filter by crop", ["All Crops","Cassava 🟤","Maize 🌽","Yam 🍠"])
     crop_map    = {"All Crops":None,"Cassava 🟤":"Cassava","Maize 🌽":"Maize","Yam 🍠":"Yam"}
@@ -236,14 +300,14 @@ with tab3:
         with st.expander(f"{info['icon']} {disease} — {emoji} {info['crop']}"):
             col1, col2 = st.columns(2)
             with col1:
-                st.markdown(f"<div style='background:{info['color']}15;border-radius:12px;padding:12px;margin-bottom:12px;'><span class='{info['pill']}'>{info['severity']} Severity</span><br><br><span style='font-size:13px;color:#555;'>{info['description']}</span></div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='background:{info['color']}15;border-radius:12px;padding:12px;margin-bottom:12px;'><span class='{info['pill']}'>{info['severity']} Severity</span><br><br><span style='font-size:13px;color:black;'>{info['description']}</span></div>", unsafe_allow_html=True)
                 st.markdown("**🚨 Symptoms:**")
                 for s in info['symptoms']: st.markdown(f"- ⚠️ {s}")
             with col2:
                 st.markdown("**💊 Treatment:**")
                 for t in info['treatment']: st.markdown(f"- ✅ {t}")
 
-    st.markdown("<div class='card' style='text-align:center;margin-top:20px;border:2px solid #e8f5e9;'><div style='font-size:18px;font-weight:800;color:#1a5c2e;margin-bottom:10px;'>🌾 Important Notice</div><div style='font-size:13px;color:#555;line-height:1.8;'>This guide is for educational and early detection purposes only.<br>Always consult a qualified <b>agricultural extension officer</b> for accurate diagnosis.<br>Early detection can save up to <b>80% of your crop</b>.</div></div>", unsafe_allow_html=True)
+    st.markdown("<div class='card' style='text-align:center;margin-top:20px;border:2px solid #e8f5e9;'><div style='font-size:18px;font-weight:800;color:black;margin-bottom:10px;'>🌾 Important Notice</div><div style='font-size:13px;color:black;line-height:1.8;'>This guide is for educational and early detection purposes only.<br>Always consult a qualified <b>agricultural extension officer</b> for accurate diagnosis.<br>Early detection can save up to <b>80% of your crop</b>.</div></div>", unsafe_allow_html=True)
 
 # FOOTER
 st.markdown("<div style='text-align:center;padding:30px;color:#aaa;font-size:12px;margin-top:20px;border-top:1px solid #eee;'>🌿 <b>CropGuard AI</b> — Crop Disease Prediction System<br>Bowen University, Iwo &nbsp;|&nbsp; Department of Computer Science<br><i>Ojugbeli Ogechi Marvellous</i> &nbsp;|&nbsp; Supervisor: Miss Busolami Oluwadamilare</div>", unsafe_allow_html=True)
