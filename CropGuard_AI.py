@@ -169,17 +169,25 @@ def load_model():
     model      = None
     class_info = None
     
-    for mf in ['BEST_MobileNetV2.h5', 'best_MobileNetV2.h5', 'model.h5']:
+    # for mf in ['BEST_MobileNetV2.h5', 'best_MobileNetV2.h5', 'model.h5']:
+    #     if os.path.exists(mf):
+    #         try:
+    #             # Try normal load first
+    #             model = tf.keras.models.load_model(mf)
+    #         except Exception:
+    #             try:
+    #                 # Try with compile=False if normal load fails
+    #                 model = tf.keras.models.load_model(mf, compile=False)
+    #             except Exception as e:
+    #                 st.error(f"Model loading error: {e}")
+    #         break
+
+    for mf in ['MobileNetV2_fixed.h5', 'best_MobileNetV2.h5', 'BEST_MobileNetV2.h5']:
         if os.path.exists(mf):
             try:
-                # Try normal load first
-                model = tf.keras.models.load_model(mf)
-            except Exception:
-                try:
-                    # Try with compile=False if normal load fails
-                    model = tf.keras.models.load_model(mf, compile=False)
-                except Exception as e:
-                    st.error(f"Model loading error: {e}")
+                model = tf.keras.models.load_model(mf, compile=False)
+            except Exception as e:
+                st.error(f"Model loading error: {e}")
             break
             
     if os.path.exists('class_info.json'):
