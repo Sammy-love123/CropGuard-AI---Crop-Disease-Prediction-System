@@ -235,34 +235,48 @@ with tab1:
 
     col_upload, col_result = st.columns([1,1], gap="large")
 
-    with col_upload:
-        uploaded = st.file_uploader("Choose a leaf image", type=['jpg','jpeg','png','bmp','webp'])
-        if uploaded:
-            img = Image.open(uploaded)
-            st.image(img, use_column_width=True, caption="Uploaded leaf image")
-            st.markdown(f"<div class='card' style='padding:15px; color:black;'><small>📐 Size: {img.size[0]}×{img.size[1]}px<br>🔄 Resized to: {IMG_SIZE[0]}×{IMG_SIZE[1]}px<br>📁 {uploaded.name}</small></div>", unsafe_allow_html=True)
+with col_upload:
+    # uploaded = st.file_uploader("Choose a leaf image", type=['jpg','jpeg','png','bmp','webp'])
+    # Let user choose input method
+        input_method = st.radio(
+            "How do you want to provide the leaf image?",
+                ["📁 Upload from device", "📷 Take a photo now"],
+            horizontal=True)
+
+        if input_method == "📁 Upload from device":
+            uploaded = st.file_uploader(
+                "Choose a leaf image",
+                type=['jpg','jpeg','png','bmp','webp']
+            )
         else:
-            st.markdown("<div style='background:white;border:2.5px dashed #2d8a4e;border-radius:20px;padding:50px 20px;text-align:center;color:#888;'><div style='font-size:50px;margin-bottom:15px;'>📷</div><div style='font-size:16px;font-weight:700;color:#1a5c2e;margin-bottom:8px;'>Upload a Leaf Photo</div><div style='font-size:13px;line-height:1.8;'>💡 <b>Tips:</b><br>• Good natural lighting<br>• Full leaf in the frame<br>• Focus on affected area<br>• Avoid blurry images</div></div>", unsafe_allow_html=True)
+            uploaded = st.camera_input("Take a photo of the leaf")
 
-    with col_result:
-        if uploaded:
-            with st.spinner("🔬 Analysing leaf..."):
-                arr   = preprocess(img, IMG_SIZE)
-                preds = model.predict(arr, verbose=0)[0]
-            top_idx   = np.argmax(preds)
-            top_class = CLASS_NAMES[top_idx]
-            top_conf  = float(preds[top_idx]) * 100
-            info      = get_info(top_class)
-            top3_idx  = np.argsort(preds)[::-1][:3]
+if uploaded:
+        img = Image.open(uploaded)
+        st.image(img, use_column_width=True, caption="Uploaded leaf image")
+        st.markdown(f"<div class='card' style='padding:15px; color:black;'><small>📐 Size: {img.size[0]}×{img.size[1]}px<br>🔄 Resized to: {IMG_SIZE[0]}×{IMG_SIZE[1]}px<br>📁 {uploaded.name}</small></div>", unsafe_allow_html=True)
+else:
+        st.markdown("<div style='background:white;border:2.5px dashed #2d8a4e;border-radius:20px;padding:50px 20px;text-align:center;color:#888;'><div style='font-size:50px;margin-bottom:15px;'>📷</div><div style='font-size:16px;font-weight:700;color:#1a5c2e;margin-bottom:8px;'>Upload a Leaf Photo</div><div style='font-size:13px;line-height:1.8;'>💡 <b>Tips:</b><br>• Good natural lighting<br>• Full leaf in the frame<br>• Focus on affected area<br>• Avoid blurry images</div></div>", unsafe_allow_html=True)
 
-            st.markdown(f"<div class='result-box' style='background:linear-gradient(135deg,{info['color']},{info['color']}bb);'><div style='font-size:45px;margin-bottom:10px;'>{info['icon']}</div><div class='result-name'>{top_class}</div><div style='font-size:14px;opacity:0.9;'>Crop: {info['crop']}</div><div class='result-conf'>{top_conf:.1f}%</div><div class='result-conf-sub'>Confidence Score</div><div><span class='{info['pill']}'>⚡ {info['severity']} Severity</span></div></div>", unsafe_allow_html=True)
+with col_result:
+    if uploaded:
+        with st.spinner("🔬 Analysing leaf..."):
+            arr   = preprocess(img, IMG_SIZE)
+            preds = model.predict(arr, verbose=0)[0]
+        top_idx   = np.argmax(preds)
+        top_class = CLASS_NAMES[top_idx]
+        top_conf  = float(preds[top_idx]) * 100
+        info      = get_info(top_class)
+        top3_idx  = np.argsort(preds)[::-1][:3]
 
-            st.markdown("<div class='section-title'>Top 3 Predictions</div>", unsafe_allow_html=True)
-            for i in top3_idx:
-                conf = float(preds[i]) * 100
-                st.markdown(f"<div class='conf-wrap'><div class='conf-row'><span>{CLASS_NAMES[i]}</span><span>{conf:.1f}%</span></div><div class='conf-track'><div class='conf-fill' style='width:{conf}%;'></div></div></div>", unsafe_allow_html=True)
-        else:
-            st.markdown("<div style='background:white;border-radius:20px;padding:40px;text-align:center;color:#aaa;box-shadow:0 3px 15px rgba(0,0,0,0.05);'><div style='font-size:50px;margin-bottom:15px;'>🤖</div><div style='font-size:16px;font-weight:700;color:#888;'>AI Results Appear Here</div><div style='font-size:13px;margin-top:10px;color:#bbb;'>Upload a leaf image on the left<br>to get instant disease detection</div></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='result-box' style='background:linear-gradient(135deg,{info['color']},{info['color']}bb);'><div style='font-size:45px;margin-bottom:10px;'>{info['icon']}</div><div class='result-name'>{top_class}</div><div style='font-size:14px;opacity:0.9;'>Crop: {info['crop']}</div><div class='result-conf'>{top_conf:.1f}%</div><div class='result-conf-sub'>Confidence Score</div><div><span class='{info['pill']}'>⚡ {info['severity']} Severity</span></div></div>", unsafe_allow_html=True)
+
+        st.markdown("<div class='section-title'>Top 3 Predictions</div>", unsafe_allow_html=True)
+        for i in top3_idx:
+            conf = float(preds[i]) * 100
+            st.markdown(f"<div class='conf-wrap'><div class='conf-row'><span>{CLASS_NAMES[i]}</span><span>{conf:.1f}%</span></div><div class='conf-track'><div class='conf-fill' style='width:{conf}%;'></div></div></div>", unsafe_allow_html=True)
+    else:
+        st.markdown("<div style='background:white;border-radius:20px;padding:40px;text-align:center;color:#aaa;box-shadow:0 3px 15px rgba(0,0,0,0.05);'><div style='font-size:50px;margin-bottom:15px;'>🤖</div><div style='font-size:16px;font-weight:700;color:#888;'>AI Results Appear Here</div><div style='font-size:13px;margin-top:10px;color:#bbb;'>Upload a leaf image on the left<br>to get instant disease detection</div></div>", unsafe_allow_html=True)
 
     if uploaded and 'top_class' in dir():
         st.markdown("---")
