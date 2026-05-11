@@ -21,6 +21,9 @@ from PIL import Image
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Fix for batch_shape compatibility issue
+tf.keras.backend.clear_session()
+
 st.set_page_config(
     page_title = "CropGuard AI",
     page_icon  = "🌿",
@@ -161,14 +164,28 @@ MODEL_RESULTS = {
     'MobileNetV2'   : {'accuracy':85.13,'f1':0.8499,'precision':0.8513,'recall':0.8513,'type':'Transfer Learning'},
 }
 
-@st.cache_resource
+@st.cache_resource(show_spinner="🌿 Loading model... please wait")
 def load_model():
-    model = None; class_info = None
-    for mf in ['BEST_MobileNetV2.h5','best_MobileNetV2.h5','model.h5']:
+    model      = None
+    class_info = None
+    
+    for mf in ['BEST_MobileNetV2.h5', 'best_MobileNetV2.h5', 'model.h5']:
         if os.path.exists(mf):
-            model = tf.keras.models.load_model(mf); break
+            try:
+                # Try normal load first
+                model = tf.keras.models.load_model(mf)
+            except Exception:
+                try:
+                    # Try with compile=False if normal load fails
+                    model = tf.keras.models.load_model(mf, compile=False)
+                except Exception as e:
+                    st.error(f"Model loading error: {e}")
+            break
+            
     if os.path.exists('class_info.json'):
-        with open('class_info.json') as f: class_info = json.load(f)
+        with open('class_info.json') as f:
+            class_info = json.load(f)
+            
     return model, class_info
 
 def preprocess(img, size=(224,224)):
