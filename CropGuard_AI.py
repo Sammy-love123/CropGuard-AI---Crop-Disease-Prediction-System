@@ -133,6 +133,17 @@ h3 {
 [data-testid="metric-container"] p {
     color: black !important;
 }
+            
+            /* Fix radio button text color */
+[data-testid="stRadio"] label {
+    color: black !important;
+}
+[data-testid="stRadio"] p {
+    color: black !important;
+}
+[data-testid="stRadio"] span {
+    color: black !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
